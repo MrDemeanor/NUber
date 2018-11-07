@@ -72,12 +72,27 @@ class Admin(Resource):
                 admin.name = self.args['name']
                 db.session.commit()
             except DatabaseError:
-                return abort(501, 'The item was not updated!')
+                return abort(501, 'The admin was not updated!')
 
-            return jsonify(message="Item was successfully updated!")
+            return jsonify(message="Admin was successfully updated!")
 
         else:
             return abort(500, 'The admin did not exist')
+
+    def delete(self):
+        admin = AdminModel.query.filter_by(id=self.args['id']).first()
+
+        if admin:
+            try:
+                db.session.delete(admin)
+                db.session.commit()
+            except DatabaseError:
+                return abort(502, 'The item was not deleted')
+
+            return jsonify(message="The admin was successfully deleted")
+
+        else:
+            return abort(503, 'The admin did not exist')
 
 #api.add_resource(Driver, '/driver')
 #api.add_resource(Rider, '/rider')
