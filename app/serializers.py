@@ -1,16 +1,16 @@
 #from flask_marshmallow import Marshmallow
 from marshmallow_sqlalchemy import ModelSchema
-from app.models import Driver, Rider, AdminModel
+from app.models import DriverModel, RiderModel, AdminModel
 
 #ma = Marshmallow()
 
 class DriverSchema(ModelSchema):
     class Meta:
-        model = Driver
+        model = DriverModel
 
 class RiderSchema(ModelSchema):
     class Meta:
-        model = Rider
+        model = RiderModel
 
 class AdminSchema(ModelSchema):
     class Meta:
