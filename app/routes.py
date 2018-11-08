@@ -4,8 +4,46 @@ from app.models import AdminModel, RiderModel, DriverModel
 from flask import jsonify, abort
 from sqlalchemy.exc import DatabaseError
 from app.serializers import admin_schema_many, rider_schema_many, driver_schema_many
+from haversine import haversine
 
 api = Api(app)
+
+'''
+    Given a rider id and a radius, display all the available drivers within the specified radius. 
+    To calculate distance, we will use the haversine formula, which takes in two sets of longitude
+    and latitude and displays the distance in miles.  
+'''
+class GetDrivers(Resource):
+
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('id', type=int)
+        parser.add_argument('radius', type=int)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+
+    def get(self):
+        rider = RiderModel.query.filter_by(id=self.args['id']).first()
+
+        if rider is None:
+            return abort(502, 'The rider was not in the database')
+
+        else:
+
+            drivers = DriverModel.query.all()
+
+            rider_coordinates = (rider.lat, rider.long)
+
+            for driver in drivers:
+                driver_coordinates = (driver.lat, driver.long)
+                if haversine(rider_coordinates, driver_coordinates, miles=True) > self.args['radius'] \
+                        or not driver.available:
+                    drivers.remove(drivers)
+
+            return jsonify(available_drivers=driver_schema_many.dump(drivers).data)
 
 class Driver(Resource):
     def __init__(self):
@@ -132,3 +170,4 @@ class Admin(Resource):
 api.add_resource(Driver, '/admin/driver')
 api.add_resource(Rider, '/admin/rider')
 api.add_resource(Admin, '/admin')
+api.add_resource(GetDrivers, '/rider/get_drivers')
