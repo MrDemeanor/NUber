@@ -46,7 +46,7 @@ class Rider(Resource):
         return jsonify(message='Rider successfully created!')
 
     def delete(self):
-        rider = RiderModel.query.filter_by(id=Rider.args['id']).first()
+        rider = RiderModel.query.filter_by(id=self.args['id']).first()
 
         if rider:
             try:
