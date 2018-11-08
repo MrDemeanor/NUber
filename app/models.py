@@ -9,7 +9,7 @@ class DriverModel(db.Model):
     y_location = db.Column(db.Float)
 
     def __repr__(self):
-        return '<User {}>'.format(self.name)
+        return '<Driver {}>'.format(self.name)
 
 class RiderModel(db.Model):
     __tablename__ = "rider"
@@ -18,7 +18,7 @@ class RiderModel(db.Model):
     name = db.Column(db.String(64), index = True)
      
     def __repr__(self):
-        return '<Post {}>'.format(self.name)
+        return '<Rider {}>'.format(self.name)
 
 
 
