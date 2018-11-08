@@ -4,7 +4,7 @@ from app.models import AdminModel, RiderModel, DriverModel
 from flask import jsonify, abort
 from sqlalchemy.exc import DatabaseError
 from app.serializers import admin_schema_many, rider_schema_many, driver_schema_many
-from haversine import haversine
+from app.haversine import Haversine
 
 api = Api(app)
 
@@ -35,11 +35,8 @@ class GetDrivers(Resource):
 
             drivers = DriverModel.query.all()
 
-            rider_coordinates = (rider.lat, rider.long)
-
             for driver in drivers:
-                driver_coordinates = (driver.lat, driver.long)
-                if haversine(rider_coordinates, driver_coordinates, miles=True) > self.args['radius'] \
+                if Haversine.calculate_distance(rider.lat, rider.long, driver.lat, driver.long) > self.args['radius'] \
                         or not driver.available:
                     drivers.remove(drivers)
 

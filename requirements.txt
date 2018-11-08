@@ -4,4 +4,3 @@ flask_migrate
 flask_restful
 flask_marshmallow
 marshmallow_sqlalchemy
-haversine
