@@ -90,6 +90,33 @@ class Driver(Resource):
         print(drivers)
         return jsonify(drivers=driver_schema_many.dump(drivers).data)
 
+    def post(self):
+        try:
+            new_driver = DriverModel(**self.args)
+            db.session.add(new_driver)
+            db.session.commit()
+
+        except DatabaseError:
+            return abort(500, 'Driver was not added to the database!')
+
+        return jsonify(message='Driver successfully created!')
+
+    def delete(self):
+        driver = DriverModel.query.filter_by(id=self.args['id']).first()
+
+        if driver:
+            try:
+                db.session.delete(driver)
+                db.session.commit()
+            except DatabaseError:
+                return abort(502, 'The item was not deleted')
+
+            return jsonify(message="The driver was successfully deleted")
+
+        else:
+            return abort(503, 'The driver did not exist')
+
+
 class Rider(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
