@@ -9,6 +9,38 @@ from app.haversine import Haversine
 api = Api(app)
 
 '''
+    Given a driver id and a new set of coordinates, update the driver with the set of new coordinates
+'''
+class UpdateDriverPosition(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('id', type=int)
+        parser.add_argument('lat', type=float)
+        parser.add_argument('long', type=float)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+
+    def put(self):
+        driver = DriverModel.query.filter_by(self.args['id']).first()
+
+        if driver is None:
+            abort(502, 'Driver was not found')
+
+        else:
+            try:
+                driver.lat = self.args['lat']
+                driver.lat = self.args['long']
+                db.session.commit()
+
+            except:
+                abort(502, 'Driver coordinates were not updated')
+
+        return jsonify(message='Driver coordinates successfully updated')
+
+'''
     Given a rider id and a radius, display all the available drivers within the specified radius. 
     To calculate distance, we will use the haversine formula, which takes in two sets of longitude
     and latitude and displays the distance in miles.  
@@ -168,3 +200,4 @@ api.add_resource(Driver, '/admin/driver')
 api.add_resource(Rider, '/admin/rider')
 api.add_resource(Admin, '/admin')
 api.add_resource(GetDrivers, '/rider/get_drivers')
+api.add_resource(UpdateDriverPosition, '/driver/update_position')
