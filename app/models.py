@@ -5,8 +5,8 @@ class DriverModel(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=False)
-    x_location = db.Column(db.Float)
-    y_location = db.Column(db.Float)
+    lat = db.Column(db.Float)
+    long = db.Column(db.Float)
 
     def __repr__(self):
         return '<Driver {}>'.format(self.name)
@@ -16,6 +16,8 @@ class RiderModel(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index = True)
+    lat = db.Column(db.Float)
+    long = db.Column(db.Float)
      
     def __repr__(self):
         return '<Rider {}>'.format(self.name)

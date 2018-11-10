@@ -24,7 +24,7 @@ class UpdateDriverPosition(Resource):
         super().__init__()
 
     def put(self):
-        driver = DriverModel.query.filter_by(self.args['id']).first()
+        driver = DriverModel.query.filter_by(id=self.args['id']).first()
 
         if driver is None:
             abort(502, 'Driver was not found')
@@ -32,7 +32,7 @@ class UpdateDriverPosition(Resource):
         else:
             try:
                 driver.lat = self.args['lat']
-                driver.lat = self.args['long']
+                driver.long = self.args['long']
                 db.session.commit()
 
             except:
@@ -87,7 +87,6 @@ class Driver(Resource):
 
     def get(self):
         drivers = DriverModel.query.all()
-        print(drivers)
         return jsonify(drivers=driver_schema_many.dump(drivers).data)
 
     def post(self):
@@ -222,9 +221,9 @@ class Admin(Resource):
         else:
             return abort(503, 'The admin did not exist')
 
-        
+
+api.add_resource(Admin, '/admin')
 api.add_resource(Driver, '/admin/driver')
 api.add_resource(Rider, '/admin/rider')
-api.add_resource(Admin, '/admin')
 api.add_resource(GetDrivers, '/rider/get_drivers')
 api.add_resource(UpdateDriverPosition, '/driver/update_position')
