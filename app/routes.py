@@ -74,6 +74,9 @@ class GetDrivers(Resource):
 
             return jsonify(available_drivers=driver_schema_many.dump(drivers).data)
 
+'''
+Driver class allows drivers to be added, removed, and modified in the database.
+'''
 class Driver(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -100,6 +103,25 @@ class Driver(Resource):
 
         return jsonify(message='Driver successfully created!')
 
+    def put(self):
+
+        driver = DriverModel.query.filter_by(id=self.args['id']).first()
+
+        if driver:
+            try:
+                driver.id = self.args['id']
+                driver.name = self.args['name']
+                driver.lat = self.args['driver']
+                driver.long = self.args['long']
+                db.session.commit()
+            except DatabaseError:
+                return abort(501, 'The admin was not updated!')
+
+            return jsonify(message="Admin was successfully updated!")
+
+        else:
+            return abort(500, 'The admin did not exist')
+
     def delete(self):
         driver = DriverModel.query.filter_by(id=self.args['id']).first()
 
@@ -115,7 +137,9 @@ class Driver(Resource):
         else:
             return abort(503, 'The driver did not exist')
 
-
+'''
+Rider class allows drivers to be added, removed, and modified in the database.
+'''
 class Rider(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -152,6 +176,25 @@ class Rider(Resource):
 
         else:
             return abort(503, 'The rider did not exist')
+
+    def put(self):
+
+        rider = RiderModel.query.filter_by(id=self.args['id']).first()
+
+        if rider:
+            try:
+                rider.id = self.args['id']
+                rider.name = self.args['name']
+                rider.lat = self.args['lat']
+                rider.long = self.args['long']
+                db.session.commit()
+            except DatabaseError:
+                return abort(501, 'The admin was not updated!')
+
+            return jsonify(message="Admin was successfully updated!")
+
+        else:
+            return abort(500, 'The admin did not exist')
 
 
     def get(self):
