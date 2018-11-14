@@ -8,6 +8,33 @@ from app.haversine import Haversine
 
 api = Api(app)
 
+class SetRiderDest(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('id', type=int)
+        parser.add_argument('destination', type=str)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+
+    def put(self):
+        rider = RiderModel.query.filter_by(id=self.args['id']).first()
+
+        if rider is None:
+            abort(502, 'Rider was not found')
+        
+        else:
+            try:
+                rider.destination = self.args['destination']
+                db.session.commit()
+            
+            except:
+                abort(503, 'Rider destination was not updated')
+        
+        return jsonify(message='Rider destination successfully updated')
+
 '''
     Given a driver id and a new set of coordinates, update the driver with the set of new coordinates
 '''
@@ -269,4 +296,5 @@ api.add_resource(Admin, '/admin')
 api.add_resource(Driver, '/admin/driver')
 api.add_resource(Rider, '/admin/rider')
 api.add_resource(GetDrivers, '/rider/get_drivers')
+api.add_resource(SetRiderDest, '/rider/set_destination')
 api.add_resource(UpdateDriverPosition, '/driver/update_position')

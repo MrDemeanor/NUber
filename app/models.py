@@ -18,6 +18,7 @@ class RiderModel(db.Model):
     name = db.Column(db.String(64), index = True)
     lat = db.Column(db.Float)
     long = db.Column(db.Float)
+    destination = db.Column(db.String(128))
      
     def __repr__(self):
         return '<Rider {}>'.format(self.name)
