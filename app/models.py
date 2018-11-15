@@ -7,6 +7,8 @@ class DriverModel(db.Model):
     name = db.Column(db.String(64), index=True, unique=False)
     lat = db.Column(db.Float)
     long = db.Column(db.Float)
+    selected_rider = db.Column(db.Integer)
+    available = db.Column(db.Boolean)
 
     def __repr__(self):
         return '<Driver {}>'.format(self.name)
@@ -19,6 +21,7 @@ class RiderModel(db.Model):
     lat = db.Column(db.Float)
     long = db.Column(db.Float)
     destination = db.Column(db.String(128))
+    selected_driver = db.Column(db.Integer)
      
     def __repr__(self):
         return '<Rider {}>'.format(self.name)

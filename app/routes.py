@@ -8,6 +8,47 @@ from app.haversine import Haversine
 
 api = Api(app)
 
+class SelectDriver(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('driver_id', type=int)
+        parser.add_argument('rider_id', type=int)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+    
+    def put(self):
+
+        # Query both the driver and the rider
+        driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
+        rider = RiderModel.query.filter_by(id=self.args['rider_id']).first()
+
+        # Check if the driver is not in the database
+        if driver is None:
+            abort(502, 'Driver was not found')
+        
+        # Check to see if the rider is not in the database
+        elif rider is None:
+            abort(502, 'Rider was not found')
+        
+        # Check driver availability
+        elif not driver.available:
+            abort(502, 'Driver is not available')
+        
+        else:
+            try:
+                rider.selected_driver = self.args['driver_id']
+                driver.selected_rider = self.args['rider_id']
+                driver.available = False
+                db.session.commit()
+            
+            except:
+                abort(502, 'Driver was not assigned to rider')
+        
+        return jsonify(message='Driver was successfully added to rider')
+
 class SetRiderDest(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -122,6 +163,7 @@ class Driver(Resource):
     def post(self):
         try:
             new_driver = DriverModel(**self.args)
+            new_driver.available = True
             db.session.add(new_driver)
             db.session.commit()
 
@@ -297,4 +339,5 @@ api.add_resource(Driver, '/admin/driver')
 api.add_resource(Rider, '/admin/rider')
 api.add_resource(GetDrivers, '/rider/get_drivers')
 api.add_resource(SetRiderDest, '/rider/set_destination')
+api.add_resource(SelectDriver, '/rider/select_driver')
 api.add_resource(UpdateDriverPosition, '/driver/update_position')

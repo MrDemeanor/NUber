@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 7bfd0ab3bc94
+Revision ID: 5df370e5c7fb
 Revises: 
-Create Date: 2018-11-14 17:53:30.950606
+Create Date: 2018-11-14 21:44:39.016698
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7bfd0ab3bc94'
+revision = '5df370e5c7fb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,6 +29,8 @@ def upgrade():
     sa.Column('name', sa.String(length=64), nullable=True),
     sa.Column('lat', sa.Float(), nullable=True),
     sa.Column('long', sa.Float(), nullable=True),
+    sa.Column('selected_rider', sa.Integer(), nullable=True),
+    sa.Column('available', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_driver_name'), 'driver', ['name'], unique=False)
@@ -38,6 +40,7 @@ def upgrade():
     sa.Column('lat', sa.Float(), nullable=True),
     sa.Column('long', sa.Float(), nullable=True),
     sa.Column('destination', sa.String(length=128), nullable=True),
+    sa.Column('selected_driver', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_rider_name'), 'rider', ['name'], unique=False)
