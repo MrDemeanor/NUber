@@ -49,6 +49,35 @@ class SelectDriver(Resource):
         
         return jsonify(message='Driver was successfully added to rider')
 
+    def get(self):
+        # Query both the driver and the rider
+        driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
+        rider = RiderModel.query.filter_by(id=self.args['rider_id']).first()
+
+        # Check if the driver is not in the database
+        if driver is None:
+            abort(502, 'Driver was not found')
+
+        # Check to see if the rider is not in the database
+        elif rider is None:
+            abort(502, 'Rider was not found')
+
+        # Check driver availability
+        elif not driver.available:
+            abort(502, 'Driver is not available')
+
+        else:
+            try:
+                '''
+                I need to figure out if we want to output an ETA here as well
+                '''
+
+            except:
+                abort(502, 'Destination and ETA could not be determined')
+
+        '''Confused on if i need to jsonify output or print output'''
+        return jsonify(message='This is the location and time till driver arrives')
+
 class SetRiderDest(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
