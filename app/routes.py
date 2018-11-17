@@ -236,6 +236,38 @@ class Driver(Resource):
             return abort(503, 'The driver did not exist')
 
 '''
+    Given a rider id and a new set of coordinates, update the rider with the set of new coordinates
+'''
+class UpdateRiderPosition(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('id', type=int)
+        parser.add_argument('lat', type=float)
+        parser.add_argument('long', type=float)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+
+    def put(self):
+        rider = RiderModel.query.filter_by(id=self.args['id']).first()
+
+        if rider is None:
+            abort(502, 'Rider was not found')
+
+        else:
+            try:
+                rider.lat = self.args['lat']
+                rider.long = self.args['long']
+                db.session.commit()
+
+            except:
+                abort(502, 'Rider coordinates were not updated')
+
+        return jsonify(message='Rider coordinates successfully updated')
+
+'''
 Rider class allows drivers to be added, removed, and modified in the database.
 '''
 class Rider(Resource):
@@ -244,6 +276,8 @@ class Rider(Resource):
 
         parser.add_argument('id', type=int)
         parser.add_argument('name', type=str)
+        parser.add_argument('lat', type=float)
+        parser.add_argument('long', type=float)
 
         self.args = parser.parse_args()
 
@@ -369,4 +403,5 @@ api.add_resource(Rider, '/admin/rider')
 api.add_resource(GetDrivers, '/rider/get_drivers')
 api.add_resource(SetRiderDest, '/rider/set_destination')
 api.add_resource(SelectDriver, '/rider/select_driver')
+api.add_resource(UpdateRiderPosition, '/rider/update_position')
 api.add_resource(UpdateDriverPosition, '/driver/update_position')
