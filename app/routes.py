@@ -180,6 +180,8 @@ class Driver(Resource):
 
         parser.add_argument('id', type=int)
         parser.add_argument('name', type=str)
+        parser.add_argument('lat', type=float)
+        parser.add_argument('long', type=float)
 
         self.args = parser.parse_args()
 
@@ -209,16 +211,16 @@ class Driver(Resource):
             try:
                 driver.id = self.args['id']
                 driver.name = self.args['name']
-                driver.lat = self.args['driver']
+                driver.lat = self.args['lat']
                 driver.long = self.args['long']
                 db.session.commit()
             except DatabaseError:
-                return abort(501, 'The admin was not updated!')
+                return abort(501, 'The driver was not updated!')
 
-            return jsonify(message="Admin was successfully updated!")
+            return jsonify(message="Driver was successfully updated!")
 
         else:
-            return abort(500, 'The admin did not exist')
+            return abort(500, 'The driver did not exist')
 
     def delete(self):
         driver = DriverModel.query.filter_by(id=self.args['id']).first()
@@ -321,12 +323,12 @@ class Rider(Resource):
                 rider.long = self.args['long']
                 db.session.commit()
             except DatabaseError:
-                return abort(501, 'The admin was not updated!')
+                return abort(501, 'The rider was not updated!')
 
-            return jsonify(message="Admin was successfully updated!")
+            return jsonify(message="Rider was successfully updated!")
 
         else:
-            return abort(500, 'The admin did not exist')
+            return abort(500, 'The rider did not exist')
 
 
     def get(self):

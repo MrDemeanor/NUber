@@ -3,4 +3,7 @@
 *.db
 *.ini
 *.mako
+*.db
+.idea\workspace.xml
+.idea\charizard.iml
 venv
