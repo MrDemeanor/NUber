@@ -182,6 +182,8 @@ class Driver(Resource):
         parser.add_argument('name', type=str)
         parser.add_argument('lat', type=float)
         parser.add_argument('long', type=float)
+        parser.add_argument('selected_rider', type=int)
+        parser.add_argument('available', type=bool)
 
         self.args = parser.parse_args()
 
@@ -194,7 +196,6 @@ class Driver(Resource):
     def post(self):
         try:
             new_driver = DriverModel(**self.args)
-            new_driver.available = True
             db.session.add(new_driver)
             db.session.commit()
 
@@ -213,6 +214,8 @@ class Driver(Resource):
                 driver.name = self.args['name']
                 driver.lat = self.args['lat']
                 driver.long = self.args['long']
+                driver.selected_rider = self.args['selected_rider']
+                driver.available = self.args['available']
                 db.session.commit()
             except DatabaseError:
                 return abort(501, 'The driver was not updated!')
