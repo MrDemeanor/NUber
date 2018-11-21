@@ -8,6 +8,36 @@ from app.haversine import Haversine
 
 api = Api(app)
 
+class UpdateDriverAvailability(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('id', type=int)
+        parser.add_argument('available', type=bool)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+    
+    def put(self):
+
+        # Query the driver from database
+        driver = DriverModel.query.filter_by(id = self.args['id']).first()
+
+        if driver is None:
+            abort(502, 'Driver was not found')
+        
+        else:
+            try:
+                print('Availability: {}'.format(driver.available))
+                print('self.args[available]: {}'.format(self.args['available']))
+                driver.available = self.args['available']
+                db.session.commit()
+            except:
+                abort(502, 'Driver availability was not updated')
+        
+        return jsonify(message='Driver availability was updated')
+
 class SelectDriver(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -228,10 +258,10 @@ class Driver(Resource):
 
         parser.add_argument('id', type=int)
         parser.add_argument('name', type=str)
-        parser.add_argument('lat', type=float)
-        parser.add_argument('long', type=float)
-        parser.add_argument('selected_rider', type=int)
-        parser.add_argument('available', type=bool)
+        #parser.add_argument('lat', type=float)
+        #parser.add_argument('long', type=float)
+        #parser.add_argument('selected_rider', type=int)
+        #parser.add_argument('available', type=bool)
 
         self.args = parser.parse_args()
 
@@ -449,14 +479,19 @@ class Admin(Resource):
         else:
             return abort(503, 'The admin did not exist')
 
-
+# Admin Routes
 api.add_resource(Admin, '/admin')
 api.add_resource(Driver, '/admin/driver')
 api.add_resource(Rider, '/admin/rider')
+
+# Driver Routes
 api.add_resource(GetDrivers, '/rider/get_drivers')
-api.add_resource(SetRiderDest, '/rider/set_destination')
 api.add_resource(SelectDriver, '/rider/select_driver')
-api.add_resource(UpdateRiderPosition, '/rider/update_position')
 api.add_resource(UpdateDriverPosition, '/driver/update_position')
+api.add_resource(UpdateDriverAvailability, '/driver/update_availability')
+
+# Rider Routes
+api.add_resource(SetRiderDest, '/rider/set_destination')
+api.add_resource(UpdateRiderPosition, '/rider/update_position')
 api.add_resource(GetRiderDest, '/driver/get_rider_destination')
 api.add_resource(GetRiderLocation, '/driver/get_rider_location')
