@@ -80,6 +80,29 @@ class SelectDriver(Resource):
 
 
 '''
+    Given rider id, get latitude and longitude as location for the rider.
+'''
+class GetRiderLocation(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('id', type=int)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+
+    def get(self):
+        rider = RiderModel.query.filter_by(id=self.args['id']).first()
+
+        if rider is None:
+            abort(502, 'Rider was not found')
+
+        return jsonify(rider.lat, rider.long)
+
+
+
+'''
     Given a rider id, get the destination of the associated rider
 '''
 class GetRiderDest(Resource):
@@ -99,9 +122,6 @@ class GetRiderDest(Resource):
             abort(502, 'Rider was not found')
 
         return jsonify(rider.destination)
-
-
-
 
 '''
     Given a rider id and destination, set the target destination of the corresponding rider
@@ -439,3 +459,4 @@ api.add_resource(SelectDriver, '/rider/select_driver')
 api.add_resource(UpdateRiderPosition, '/rider/update_position')
 api.add_resource(UpdateDriverPosition, '/driver/update_position')
 api.add_resource(GetRiderDest, '/driver/get_rider_destination')
+api.add_resource(GetRiderLocation, '/driver/get_rider_location')
