@@ -3,7 +3,7 @@ from flask_restful import Resource, Api, reqparse
 from app.models import AdminModel, RiderModel, DriverModel
 from flask import jsonify, abort
 from sqlalchemy.exc import DatabaseError
-from app.serializers import admin_schema_many, rider_schema_many, driver_schema_many
+from app.serializers import admin_schema_many, rider_schema_many, driver_schema_many, rider_schema
 from app.haversine import Haversine
 
 api = Api(app)
@@ -78,6 +78,34 @@ class SelectDriver(Resource):
         '''Confused on if i need to jsonify output or print output'''
         return jsonify(message='This is the location and time till driver arrives')
 
+
+'''
+    Given a rider id, get the destination of the associated rider
+'''
+class GetRiderDest(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('id', type=int)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+
+    def get(self):
+        rider = RiderModel.query.filter_by(id=self.args['id']).first()
+
+        if rider is None:
+            abort(502, 'Rider was not found')
+
+        return jsonify(rider.destination)
+
+
+
+
+'''
+    Given a rider id and destination, set the target destination of the corresponding rider
+'''
 class SetRiderDest(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -410,3 +438,4 @@ api.add_resource(SetRiderDest, '/rider/set_destination')
 api.add_resource(SelectDriver, '/rider/select_driver')
 api.add_resource(UpdateRiderPosition, '/rider/update_position')
 api.add_resource(UpdateDriverPosition, '/driver/update_position')
+api.add_resource(GetRiderDest, '/driver/get_rider_destination')
