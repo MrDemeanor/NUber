@@ -7,3 +7,4 @@
 .idea\workspace.xml
 .idea\charizard.iml
 venv
+migrations

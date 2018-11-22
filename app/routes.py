@@ -110,30 +110,41 @@ class SelectDriver(Resource):
 
 
 '''
-    Given rider id, get latitude and longitude as location for the rider.
+    Given driver and rider id, get latitude and longitude as location for the rider.
 '''
 class GetRiderLocation(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
 
-        parser.add_argument('id', type=int)
+        parser.add_argument('driver_id', type=int)
+        parser.add_argument('rider_id', type=int)
 
         self.args = parser.parse_args()
 
         super().__init__()
 
     def get(self):
-        rider = RiderModel.query.filter_by(id=self.args['id']).first()
+        driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
+        rider = RiderModel.query.filter_by(id=driver.selected_rider).first()
+
+        if driver is None:
+            abort(502, 'Driver was not found')
+
+        if driver.selected_rider is None:
+            abort(502, 'Driver does not have a rider')
 
         if rider is None:
             abort(502, 'Rider was not found')
+        
+        if rider.lat is None or rider.long is None:
+            abort(502, 'Rider does not have a set location')
 
-        return jsonify(rider.lat, rider.long)
+        return jsonify(selected_rider_lat=rider.lat, selected_rider_long=rider.long)
 
 
 
 '''
-    Given a rider id, get the destination of the associated rider
+    Given a driver id, get the destination of the associated rider
 '''
 class GetRiderDest(Resource):
     def __init__(self):
@@ -146,12 +157,22 @@ class GetRiderDest(Resource):
         super().__init__()
 
     def get(self):
-        rider = RiderModel.query.filter_by(id=self.args['id']).first()
+        driver = DriverModel.query.filter_by(id=self.args['id']).first()
+        rider = RiderModel.query.filter_by(id=driver.selected_rider).first()
 
-        if rider is None:
+        if driver is None:
+            abort(502, 'Driver was not found')
+        
+        elif driver.selected_rider is None:
+            abort(502, 'Driver does not have a rider')
+        
+        elif rider is None:
             abort(502, 'Rider was not found')
+        
+        elif rider.destination is None:
+            abort(502, 'Rider does not have a destination')
 
-        return jsonify(rider.destination)
+        return jsonify(rider_destination=rider.destination)
 
 '''
     Given a rider id and destination, set the target destination of the corresponding rider
@@ -485,13 +506,13 @@ api.add_resource(Driver, '/admin/driver')
 api.add_resource(Rider, '/admin/rider')
 
 # Driver Routes
-api.add_resource(GetDrivers, '/rider/get_drivers')
-api.add_resource(SelectDriver, '/rider/select_driver')
 api.add_resource(UpdateDriverPosition, '/driver/update_position')
 api.add_resource(UpdateDriverAvailability, '/driver/update_availability')
+api.add_resource(GetRiderDest, '/driver/get_rider_destination')
+api.add_resource(GetRiderLocation, '/driver/get_rider_location')
 
 # Rider Routes
 api.add_resource(SetRiderDest, '/rider/set_destination')
 api.add_resource(UpdateRiderPosition, '/rider/update_position')
-api.add_resource(GetRiderDest, '/driver/get_rider_destination')
-api.add_resource(GetRiderLocation, '/driver/get_rider_location')
+api.add_resource(SelectDriver, '/rider/select_driver')
+api.add_resource(GetDrivers, '/rider/get_drivers')
