@@ -117,7 +117,6 @@ class GetRiderLocation(Resource):
         parser = reqparse.RequestParser()
 
         parser.add_argument('driver_id', type=int)
-        parser.add_argument('rider_id', type=int)
 
         self.args = parser.parse_args()
 
