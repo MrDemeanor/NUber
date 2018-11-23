@@ -29,12 +29,12 @@ class UpdateDriverAvailability(Resource):
         
         else:
             try:
-                driver.available = self.args['available']
-
-                if len(self.args['available']) is 0:
+                if len(self.args['available']) is 0 and driver.available is True:
                     rider = RiderModel.query.filter_by(id=driver.selected_rider)
                     rider.selected_driver = None
                     driver.selected_rider = None
+                
+                driver.available = self.args['available']
 
                 db.session.commit()
             except:
