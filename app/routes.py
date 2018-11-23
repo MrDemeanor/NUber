@@ -153,14 +153,14 @@ class GetRiderDest(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
 
-        parser.add_argument('id', type=int)
+        parser.add_argument('driver_id', type=int)
 
         self.args = parser.parse_args()
 
         super().__init__()
 
     def get(self):
-        driver = DriverModel.query.filter_by(id=self.args['id']).first()
+        driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
         rider = RiderModel.query.filter_by(id=driver.selected_rider).first()
 
         if driver is None:
