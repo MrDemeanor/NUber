@@ -269,7 +269,7 @@ class GetDrivers(Resource):
             for driver in drivers:
                 if Haversine.calculate_distance(rider.lat, rider.long, driver.lat, driver.long) > self.args['radius'] \
                         or not driver.available:
-                    drivers.remove(drivers)
+                    drivers.remove(driver)
 
             return jsonify(available_drivers=driver_schema_many.dump(drivers).data)
 
@@ -282,10 +282,10 @@ class Driver(Resource):
 
         parser.add_argument('id', type=int)
         parser.add_argument('name', type=str)
-        #parser.add_argument('lat', type=float)
-        #parser.add_argument('long', type=float)
+        parser.add_argument('available', type=bool)
+        parser.add_argument('lat', type=float)
+        parser.add_argument('long', type=float)
         #parser.add_argument('selected_rider', type=int)
-        #parser.add_argument('available', type=bool)
 
         self.args = parser.parse_args()
 
