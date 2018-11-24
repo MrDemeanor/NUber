@@ -83,16 +83,37 @@ class SelectDriver(Resource):
         
         return jsonify(message='Driver was successfully added to rider')
 
+'''
+    Given a rider, if that rider has a selected driver, return that driver's current location
+'''
+class GetRiderDriverLocation(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('rider_id', type=int)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+
     def get(self):
-        # Query both the driver and the rider
+        # Query both the rider and the driver
         rider = RiderModel.query.filter_by(id=self.args['rider_id']).first()
         driver = DriverModel.query.filter_by(id=rider.selected_driver).first()
 
         # Check to see if the rider is not in the database
         if rider is None:
             abort(502, 'Rider does not exist')
+
+        #Check to see if rider currently has a driver
         elif driver is None:
             abort(502, 'Driver does not exist')
+
+        #Check to see if driver has a set location
+        elif driver.long is None or driver.lat is None:
+            abort(502, 'Driver location is not properly set')
+
+        #Print the rider's driver's long and lat
         else:
             try:
                 return jsonify(driver_long=driver.long, driver_lat=driver.lat)
@@ -129,6 +150,43 @@ class GetRiderLocation(Resource):
 
         return jsonify(selected_rider_lat=rider.lat, selected_rider_long=rider.long)
 
+class GetRiderCharge(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('driver_id', type=int)
+
+        self.args = parser.parse_args()
+
+        super().__init__()
+
+    def get(self):
+        driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
+        rider = RiderModel.query.filter_by(id=driver.selected_rider).first()
+
+        #check to see if driver exists
+        if driver is None:
+            abort(502, 'Driver was not found in the database')
+
+        #check to see if driver has a current rider
+        elif driver.selected_rider is None:
+            abort(502, 'Driver does not have a currently selected rider')
+
+        #check to see if rider has a currently selected destination (maybe check this when rider added to driver)
+        elif rider.destination is None:
+            abort(502, 'Rider does not have a currently selected destination')
+
+        #check to see if rider has a currently set location
+        elif rider.long is None or rider.lat is None:
+            abort(502, 'Riders location is not properly set')
+
+        #find the distance between the riders location and his destionation and set a price accordingly
+        else:
+            try:
+                #Need to add the functionality with Google's API
+                jsonify(message='test')
+            except:
+                abort(502, 'Rider''s charge could not be determined')
 
 
 '''
@@ -498,9 +556,11 @@ api.add_resource(UpdateDriverPosition, '/driver/update_position')
 api.add_resource(UpdateDriverAvailability, '/driver/update_availability')
 api.add_resource(GetRiderDest, '/driver/get_rider_destination')
 api.add_resource(GetRiderLocation, '/driver/get_rider_location')
+api.add_resource(GetRiderCharge, '/driver/get_rider_charge')
 
 # Rider Routes
 api.add_resource(SetRiderDest, '/rider/set_destination')
 api.add_resource(UpdateRiderPosition, '/rider/update_position')
 api.add_resource(SelectDriver, '/rider/select_driver')
 api.add_resource(GetDrivers, '/rider/get_drivers')
+api.add_resource(GetRiderDriverLocation, '/rider/get_driver_location')
