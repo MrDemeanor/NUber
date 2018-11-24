@@ -85,34 +85,19 @@ class SelectDriver(Resource):
 
     def get(self):
         # Query both the driver and the rider
-        driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
         rider = RiderModel.query.filter_by(id=self.args['rider_id']).first()
-
-        # Check if the driver is not in the database
-        if driver is None:
-            abort(502, 'Driver was not found')
+        driver = DriverModel.query.filter_by(id=rider.selected_driver).first()
 
         # Check to see if the rider is not in the database
-        elif rider is None:
-            abort(502, 'Rider was not found')
-
-        # Check driver availability
-        elif not driver.available:
-            abort(502, 'Driver is not available')
-
+        if rider is None:
+            abort(502, 'Rider does not exist')
+        elif driver is None:
+            abort(502, 'Driver does not exist')
         else:
             try:
-                '''
-                I need to figure out if we want to output an ETA here as well
-                '''
-
+                return jsonify(driver_long=driver.long, driver_lat=driver.lat)
             except:
-                abort(502, 'Destination and ETA could not be determined')
-
-        '''Confused on if i need to jsonify output or print output'''
-        return jsonify(message='This is the location and time till driver arrives')
-
-
+                abort(502, 'Driver location could not be determined')
 '''
     Given driver and rider id, get latitude and longitude as location for the rider.
 '''
