@@ -97,16 +97,18 @@ class GetRiderDriverLocation(Resource):
         super().__init__()
 
     def get(self):
-        # Query both the rider and the driver
+        # Query the rider
         rider = RiderModel.query.filter_by(id=self.args['rider_id']).first()
-        driver = DriverModel.query.filter_by(id=rider.selected_driver).first()
 
         # Check to see if the rider is not in the database
         if rider is None:
             abort(502, 'Rider does not exist')
 
+        # If rider exists query for its selected driver
+        driver = DriverModel.query.filter_by(id=rider.selected_driver).first()
+
         #Check to see if rider currently has a driver
-        elif driver is None:
+        if driver is None:
             abort(502, 'Driver does not exist')
 
         #Check to see if driver has a set location
