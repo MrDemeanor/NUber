@@ -20,6 +20,7 @@ class RiderModel(db.Model):
     name = db.Column(db.String(64), index = True)
     lat = db.Column(db.Float)
     long = db.Column(db.Float)
+    groupHost = db.Column(db.String(64))
     destination = db.Column(db.String(128))
     selected_driver = db.Column(db.Integer)
      
@@ -37,3 +38,5 @@ class AdminModel(db.Model):
 
     def __repr__(self):
         return '<Admin {}>'.format(self.name)
+
+    

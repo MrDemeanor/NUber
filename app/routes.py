@@ -163,8 +163,10 @@ class GetRiderCharge(Resource):
         super().__init__()
 
     def get(self):
+        #add if to check whether rider is groupHost or not 
         driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
         rider = RiderModel.query.filter_by(id=driver.selected_rider).first()
+        group = RiderModel.query.filter_by(groupHost=driver.selected_rider_groupHost).all()
 
         #check to see if driver exists
         if driver is None:
@@ -186,7 +188,9 @@ class GetRiderCharge(Resource):
         else:
             try:
                 #Need to add the functionality with Google's API
-                jsonify(message='test')
+                #divide the amount caculated by number of elements in group
+                numRiders = count(group)
+                jsonify(message='group = ' + numRiders)
             except:
                 abort(502, 'Rider''s charge could not be determined')
 
@@ -430,6 +434,7 @@ class Rider(Resource):
         parser.add_argument('name', type=str)
         parser.add_argument('lat', type=float)
         parser.add_argument('long', type=float)
+        parser.add_argument('groupHost', type=str)
 
         self.args = parser.parse_args()
 
@@ -471,6 +476,7 @@ class Rider(Resource):
                 rider.name = self.args['name']
                 rider.lat = self.args['lat']
                 rider.long = self.args['long']
+                rider.group_host = self.args['group_host']
                 db.session.commit()
             except DatabaseError:
                 return abort(501, 'The rider was not updated!')
@@ -485,8 +491,6 @@ class Rider(Resource):
         riders = RiderModel.query.all()
         print(riders)
         return jsonify(riders=rider_schema_many.dump(riders).data)
-
-
 
 class Admin(Resource):
     def __init__(self):
