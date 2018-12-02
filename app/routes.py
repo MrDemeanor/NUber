@@ -29,10 +29,6 @@ class UpdateDriverAvailability(Resource):
         
         else:
             try:
-                if len(self.args['available']) is 0 and driver.available is True:
-                    rider = RiderModel.query.filter_by(id=driver.selected_rider)
-                    rider.selected_driver = None
-                    driver.selected_rider = None
                 
                 driver.available = self.args['available']
 
