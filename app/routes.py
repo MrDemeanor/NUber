@@ -55,6 +55,9 @@ class SelectDriver(Resource):
         driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
         rider = RiderModel.query.filter_by(id=self.args['rider_id']).first()
 
+        if rider.name != rider.groupHost and rider.groupHost != '':
+            abort(502, 'Rider was not group host.')
+            
         # Check if the driver is not in the database
         if driver is None:
             abort(502, 'Driver was not found')
