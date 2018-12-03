@@ -5,8 +5,11 @@ from flask import jsonify, abort
 from sqlalchemy.exc import DatabaseError
 from app.serializers import admin_schema_many, rider_schema_many, driver_schema_many, rider_schema
 from app.haversine import Haversine
+import urllib
+import json
 
 api = Api(app)
+
 
 class UpdateDriverAvailability(Resource):
     def __init__(self):
@@ -18,25 +21,26 @@ class UpdateDriverAvailability(Resource):
         self.args = parser.parse_args()
 
         super().__init__()
-    
+
     def put(self):
 
         # Query the driver from database
-        driver = DriverModel.query.filter_by(id = self.args['id']).first()
+        driver = DriverModel.query.filter_by(id=self.args['id']).first()
 
         if driver is None:
             abort(502, 'Driver was not found')
-        
+
         else:
             try:
-                
+
                 driver.available = self.args['available']
 
                 db.session.commit()
             except:
                 abort(502, 'Driver availability was not updated')
-        
+
         return jsonify(message='Driver availability was updated')
+
 
 class SelectDriver(Resource):
     def __init__(self):
@@ -48,7 +52,7 @@ class SelectDriver(Resource):
         self.args = parser.parse_args()
 
         super().__init__()
-    
+
     def put(self):
 
         # Query both the driver and the rider
@@ -58,30 +62,33 @@ class SelectDriver(Resource):
         # Check if the driver is not in the database
         if driver is None:
             abort(502, 'Driver was not found')
-        
+
         # Check to see if the rider is not in the database
         elif rider is None:
             abort(502, 'Rider was not found')
-        
+
         # Check driver availability
         elif not driver.available:
             abort(502, 'Driver is not available')
-        
+
         else:
             try:
                 rider.selected_driver = self.args['driver_id']
                 driver.selected_rider = self.args['rider_id']
                 driver.available = False
                 db.session.commit()
-            
+
             except:
                 abort(502, 'Driver was not assigned to rider')
-        
+
         return jsonify(message='Driver was successfully added to rider')
+
 
 '''
     Given a rider, if that rider has a selected driver, return that driver's current location
 '''
+
+
 class GetRiderDriverLocation(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -103,23 +110,27 @@ class GetRiderDriverLocation(Resource):
         # If rider exists query for its selected driver
         driver = DriverModel.query.filter_by(id=rider.selected_driver).first()
 
-        #Check to see if rider currently has a driver
+        # Check to see if rider currently has a driver
         if driver is None:
             abort(502, 'Driver does not exist')
 
-        #Check to see if driver has a set location
+        # Check to see if driver has a set location
         elif driver.long is None or driver.lat is None:
             abort(502, 'Driver location is not properly set')
 
-        #Print the rider's driver's long and lat
+        # Print the rider's driver's long and lat
         else:
             try:
                 return jsonify(driver_long=driver.long, driver_lat=driver.lat)
             except:
                 abort(502, 'Driver location could not be determined')
+
+
 '''
     Given driver and rider id, get latitude and longitude as location for the rider.
 '''
+
+
 class GetRiderLocation(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -142,11 +153,12 @@ class GetRiderLocation(Resource):
 
         if rider is None:
             abort(502, 'Rider was not found')
-        
+
         if rider.lat is None or rider.long is None:
             abort(502, 'Rider does not have a set location')
 
         return jsonify(selected_rider_lat=rider.lat, selected_rider_long=rider.long)
+
 
 class GetRiderCharge(Resource):
     def __init__(self):
@@ -159,41 +171,52 @@ class GetRiderCharge(Resource):
         super().__init__()
 
     def get(self):
-        #add if to check whether rider is groupHost or not 
+        # add if to check whether rider is groupHost or not
         driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
         rider = RiderModel.query.filter_by(id=driver.selected_rider).first()
-        group = RiderModel.query.filter_by(groupHost=driver.selected_rider_groupHost).all()
 
-        #check to see if driver exists
+        # check to see if driver exists
         if driver is None:
             abort(502, 'Driver was not found in the database')
 
-        #check to see if driver has a current rider
+        # check to see if driver has a current rider
         elif driver.selected_rider is None:
             abort(502, 'Driver does not have a currently selected rider')
 
-        #check to see if rider has a currently selected destination (maybe check this when rider added to driver)
+        # check to see if rider has a currently selected destination (maybe check this when rider added to driver)
         elif rider.destination is None:
             abort(502, 'Rider does not have a currently selected destination')
 
-        #check to see if rider has a currently set location
+        # check to see if rider has a currently set location
         elif rider.long is None or rider.lat is None:
             abort(502, 'Riders location is not properly set')
 
-        #find the distance between the riders location and his destionation and set a price accordingly
+        # find the distance between the riders location and his destionation and set a price accordingly
         else:
             try:
-                #Need to add the functionality with Google's API
-                #divide the amount caculated by number of elements in group
-                numRiders = count(group)
-                jsonify(message='group = ' + numRiders)
+                # Need to add the functionality with Google's API
+                # divide the amount caculated by number of elements in group
+                # numRiders = count(group)
+                # jsonify(message='group = ' + numRiders)
+                endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
+                key = 'AIzaSyBiT4S39tVg5g2VjF90A3K5r-rGzsWMJmw'
+                origin = "%s,%s" % (rider.lat, rider.long)
+                destination = rider.destination.replace(" ", "+")
+                navigation_requestion = 'origin={}&destination={}&key={}'.format(origin, destination, key)
+                request = endpoint + navigation_requestion
+                print(request)
+                return jsonify(message='test1')
             except:
                 abort(502, 'Rider''s charge could not be determined')
+
+        return jsonify(message='test2')
 
 
 '''
     Given a driver id, get the destination of the associated rider
 '''
+
+
 class GetRiderDest(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -210,21 +233,24 @@ class GetRiderDest(Resource):
 
         if driver is None:
             abort(502, 'Driver was not found')
-        
+
         elif driver.selected_rider is None:
             abort(502, 'Driver does not have a rider')
-        
+
         elif rider is None:
             abort(502, 'Rider was not found')
-        
+
         elif rider.destination is None:
             abort(502, 'Rider does not have a destination')
 
         return jsonify(rider_destination=rider.destination)
 
+
 '''
     Given a rider id and destination, set the target destination of the corresponding rider
 '''
+
+
 class SetRiderDest(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -241,20 +267,23 @@ class SetRiderDest(Resource):
 
         if rider is None:
             abort(502, 'Rider was not found')
-        
+
         else:
             try:
                 rider.destination = self.args['destination']
                 db.session.commit()
-            
+
             except:
                 abort(503, 'Rider destination was not updated')
-        
+
         return jsonify(message='Rider destination successfully updated')
+
 
 '''
     Given a driver id and a new set of coordinates, update the driver with the set of new coordinates
 '''
+
+
 class UpdateDriverPosition(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -284,11 +313,14 @@ class UpdateDriverPosition(Resource):
 
         return jsonify(message='Driver coordinates successfully updated')
 
+
 '''
     Given a rider id and a radius, display all the available drivers within the specified radius. 
     To calculate distance, we will use the haversine formula, which takes in two sets of longitude
     and latitude and displays the distance in miles.  
 '''
+
+
 class GetDrivers(Resource):
 
     def __init__(self):
@@ -318,9 +350,12 @@ class GetDrivers(Resource):
 
             return jsonify(available_drivers=driver_schema_many.dump(drivers).data)
 
+
 '''
 Driver class allows drivers to be added, removed, and modified in the database.
 '''
+
+
 class Driver(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -330,7 +365,7 @@ class Driver(Resource):
         parser.add_argument('available', type=bool)
         parser.add_argument('lat', type=float)
         parser.add_argument('long', type=float)
-        #parser.add_argument('selected_rider', type=int)
+        # parser.add_argument('selected_rider', type=int)
 
         self.args = parser.parse_args()
 
@@ -387,9 +422,12 @@ class Driver(Resource):
         else:
             return abort(503, 'The driver did not exist')
 
+
 '''
     Given a rider id and a new set of coordinates, update the rider with the set of new coordinates
 '''
+
+
 class UpdateRiderPosition(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -419,9 +457,12 @@ class UpdateRiderPosition(Resource):
 
         return jsonify(message='Rider coordinates successfully updated')
 
+
 '''
 Rider class allows drivers to be added, removed, and modified in the database.
 '''
+
+
 class Rider(Resource):
     def __init__(self):
         parser = reqparse.RequestParser()
@@ -482,11 +523,11 @@ class Rider(Resource):
         else:
             return abort(500, 'The rider did not exist')
 
-
     def get(self):
         riders = RiderModel.query.all()
         print(riders)
         return jsonify(riders=rider_schema_many.dump(riders).data)
+
 
 class Admin(Resource):
     def __init__(self):
@@ -506,7 +547,7 @@ class Admin(Resource):
 
     def post(self):
         try:
-            #AdminModel.create(**self.args)
+            # AdminModel.create(**self.args)
             new_admin = AdminModel(**self.args)
             db.session.add(new_admin)
             db.session.commit()
@@ -547,6 +588,7 @@ class Admin(Resource):
 
         else:
             return abort(503, 'The admin did not exist')
+
 
 # Admin Routes
 api.add_resource(Admin, '/admin')
