@@ -5,8 +5,8 @@ from flask import jsonify, abort
 from sqlalchemy.exc import DatabaseError
 from app.serializers import admin_schema_many, rider_schema_many, driver_schema_many, rider_schema
 from app.haversine import Haversine
-import urllib
-import json
+from googlemaps import client
+from googlemaps import distance_matrix
 
 api = Api(app)
 
@@ -198,22 +198,26 @@ class GetRiderCharge(Resource):
         else:
             try:
                 # Need to add the functionality with Google's API
+
+                #Origins will be passed as longitude/latitude and destinations will be passed as a physical address
+                origins = rider.lat, rider.long
+                destination = rider.destination
+
+                #call the client function and provide API
+                gmaps = client.Client(key="AIzaSyBWG-QiOfVXIYpwv3h61Xbtf78LiFYTHLQ")
+
+                #Distance is calculated in meters, converted to miles, and multiplied by 1.50 (cost of driving a mile)
+                distance = distance_matrix.distance_matrix(gmaps, origins, destination, mode='driving')["rows"][0]["elements"][0]["distance"]["value"]
+                distance = distance*0.000621371
+                cost = distance*1.50
+
+                return jsonify(cost=cost)
+
                 # divide the amount caculated by number of elements in group
                 # numRiders = count(group)
                 # jsonify(message='group = ' + numRiders)
-                endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-                key = 'AIzaSyBiT4S39tVg5g2VjF90A3K5r-rGzsWMJmw'
-                origin = "%s,%s" % (rider.lat, rider.long)
-                destination = rider.destination.replace(" ", "+")
-                navigation_requestion = 'origin={}&destination={}&key={}'.format(origin, destination, key)
-                request = endpoint + navigation_requestion
-                print(request)
-                return jsonify(message='test1')
             except:
                 abort(502, 'Rider''s charge could not be determined')
-
-        return jsonify(message='test2')
-
 
 '''
     Given a driver id, get the destination of the associated rider
