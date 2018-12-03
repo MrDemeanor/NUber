@@ -5,8 +5,8 @@ from flask import jsonify, abort
 from sqlalchemy.exc import DatabaseError
 from app.serializers import admin_schema_many, rider_schema_many, driver_schema_many, rider_schema
 from app.haversine import Haversine
-from googlemaps import client
 from googlemaps import distance_matrix
+from googlemaps import client
 
 api = Api(app)
 
@@ -177,7 +177,9 @@ class GetRiderCharge(Resource):
         # add if to check whether rider is groupHost or not
         driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
         rider = RiderModel.query.filter_by(id=driver.selected_rider).first()
-
+        group = RiderModel.query.filter_by(groupHost=rider.groupHost).all()
+        numRiders = len(group)
+        
         # check to see if driver exists
         if driver is None:
             abort(502, 'Driver was not found in the database')
@@ -210,12 +212,15 @@ class GetRiderCharge(Resource):
                 distance = distance_matrix.distance_matrix(gmaps, origins, destination, mode='driving')["rows"][0]["elements"][0]["distance"]["value"]
                 distance = distance*0.000621371
                 cost = distance*1.50
+                indCost /= numRiders #cost for individual rider in group
 
+                for groupMember in group:
+                    groupMember.oustandingBalance = indCost
+
+                db.session.commit()
+                
                 return jsonify(cost=cost)
 
-                # divide the amount caculated by number of elements in group
-                # numRiders = count(group)
-                # jsonify(message='group = ' + numRiders)
             except:
                 abort(502, 'Rider''s charge could not be determined')
 
@@ -372,6 +377,7 @@ class Driver(Resource):
         parser.add_argument('available', type=bool)
         parser.add_argument('lat', type=float)
         parser.add_argument('long', type=float)
+        parser.add_argument('amountMoney', type=float)
         # parser.add_argument('selected_rider', type=int)
 
         self.args = parser.parse_args()
@@ -405,6 +411,7 @@ class Driver(Resource):
                 driver.long = self.args['long']
                 driver.selected_rider = self.args['selected_rider']
                 driver.available = self.args['available']
+                driver.amountMoney = self.args['amountMoney']
                 db.session.commit()
             except DatabaseError:
                 return abort(501, 'The driver was not updated!')
@@ -479,7 +486,8 @@ class Rider(Resource):
         parser.add_argument('lat', type=float)
         parser.add_argument('long', type=float)
         parser.add_argument('groupHost', type=str)
-
+        parser.add_argument('outstandingBalance', type=float)
+        
         self.args = parser.parse_args()
 
         super().__init__()
@@ -520,7 +528,8 @@ class Rider(Resource):
                 rider.name = self.args['name']
                 rider.lat = self.args['lat']
                 rider.long = self.args['long']
-                rider.group_host = self.args['group_host']
+                rider.groupHost = self.args['groupHost']
+                rider.outstandingBalance = self.args['oustandingBalance']
                 db.session.commit()
             except DatabaseError:
                 return abort(501, 'The rider was not updated!')
