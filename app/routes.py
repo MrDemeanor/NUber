@@ -59,7 +59,7 @@ class SelectDriver(Resource):
         driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
         rider = RiderModel.query.filter_by(id=self.args['rider_id']).first()
 
-        if rider.name != rider.groupHost and rider.groupHost != '':
+        if rider.name != rider.groupHost and rider.groupHost != None:
             abort(502, 'Rider was not group host.')
             
         # Check if the driver is not in the database
@@ -212,7 +212,7 @@ class GetRiderCharge(Resource):
                 distance = distance_matrix.distance_matrix(gmaps, origins, destination, mode='driving')["rows"][0]["elements"][0]["distance"]["value"]
                 distance = distance*0.000621371
                 cost = distance*1.50
-                indCost /= numRiders #cost for individual rider in group
+                indCost = cost/numRiders #cost for individual rider in group
 
                 for groupMember in group:
                     groupMember.oustandingBalance = indCost
