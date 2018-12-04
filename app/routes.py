@@ -206,7 +206,7 @@ class GetRiderCharge(Resource):
                 destination = rider.destination
 
                 #call the client function and provide API
-                gmaps = client.Client(key="AIzaSyBWG-QiOfVXIYpwv3h61Xbtf78LiFYTHLQ")
+                gmaps = client.Client(key="AIzaSyDnU-JemCr6s4EIUmmmglb-w5LdoYzZInE")
 
                 #Distance is calculated in meters, converted to miles, and multiplied by 1.50 (cost of driving a mile)
                 distance = distance_matrix.distance_matrix(gmaps, origins, destination, mode='driving')["rows"][0]["elements"][0]["distance"]["value"]
@@ -219,7 +219,7 @@ class GetRiderCharge(Resource):
 
                 db.session.commit()
                 
-                return jsonify(cost=cost)
+                return jsonify(num_rider=numRiders, cost=cost, cost_per_rider=indCost)
 
             except:
                 abort(502, 'Rider''s charge could not be determined')
