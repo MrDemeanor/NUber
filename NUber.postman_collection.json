@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "179c2e01-de07-41ad-8b5c-75031776b9e9",
+		"_postman_id": "5b9e3bb7-cf16-4563-8ff3-89572a56b19b",
 		"name": "NUber",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -32,16 +32,81 @@
 			"response": []
 		},
 		{
-			"name": "POST Admin",
+			"name": "GET Drivers",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/admin?id=1&name=Default",
+					"raw": "http://127.0.0.1:5000/admin/driver",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"admin",
+						"driver"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Riders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/admin/rider",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"admin",
+						"rider"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "DefaultAdmin",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/admin",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -52,16 +117,127 @@
 					"port": "5000",
 					"path": [
 						"admin"
-					],
-					"query": [
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Driver",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
 						{
 							"key": "id",
-							"value": "1"
+							"value": "1",
+							"type": "text"
 						},
 						{
 							"key": "name",
-							"value": "Default"
+							"value": "DefaultDriver",
+							"type": "text"
+						},
+						{
+							"key": "lat",
+							"value": "0.111",
+							"type": "text"
+						},
+						{
+							"key": "long",
+							"value": "0.222",
+							"type": "text"
+						},
+						{
+							"key": "available",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "amountMoney",
+							"value": "100.00",
+							"type": "text"
+						},
+						{
+							"key": "selected_rider",
+							"value": "0",
+							"type": "text"
 						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/admin/driver",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"admin",
+						"driver"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Rider",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "DefaultRider",
+							"type": "text"
+						},
+						{
+							"key": "lat",
+							"value": "0.555",
+							"type": "text"
+						},
+						{
+							"key": "long",
+							"value": "0.666",
+							"type": "text"
+						},
+						{
+							"key": "outstandingBalance",
+							"value": "0.0",
+							"type": "text"
+						},
+						{
+							"key": "groupHost",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/admin/rider",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"admin",
+						"rider"
 					]
 				}
 			},
@@ -73,11 +249,17 @@
 				"method": "PUT",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": ""
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "DefaultAdminUpdated",
+							"type": "text"
+						}
+					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/admin?id=1&name=Default",
+					"raw": "http://127.0.0.1:5000/admin?id=1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -93,10 +275,129 @@
 						{
 							"key": "id",
 							"value": "1"
-						},
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Driver",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
 						{
 							"key": "name",
-							"value": "Default"
+							"value": "DefaultDriverUpdated",
+							"type": "text"
+						},
+						{
+							"key": "lat",
+							"value": "0.333",
+							"type": "text"
+						},
+						{
+							"key": "long",
+							"value": "0.444",
+							"type": "text"
+						},
+						{
+							"key": "available",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "amountMoney",
+							"value": "101.00",
+							"type": "text"
+						},
+						{
+							"key": "selected_rider",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/admin/driver?id=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"admin",
+						"driver"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Rider",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "DefaultRiderUpdated",
+							"type": "text"
+						},
+						{
+							"key": "lat",
+							"value": "0.666",
+							"type": "text"
+						},
+						{
+							"key": "long",
+							"value": "0.777",
+							"type": "text"
+						},
+						{
+							"key": "outstandingBalance",
+							"value": "0.0",
+							"type": "text"
+						},
+						{
+							"key": "groupHost",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/admin/rider?id=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"admin",
+						"rider"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
 						}
 					]
 				}
@@ -136,123 +437,6 @@
 			"response": []
 		},
 		{
-			"name": "GET Drivers",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/admin/driver",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"admin",
-						"driver"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "POST Driver",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/admin/driver?id=1&name=DefaultDriver&lat=0.111&long=0.222",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"admin",
-						"driver"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						},
-						{
-							"key": "name",
-							"value": "DefaultDriver"
-						},
-						{
-							"key": "lat",
-							"value": "0.111"
-						},
-						{
-							"key": "long",
-							"value": "0.222"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PUT Driver",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/admin/driver?id=1&name=DefaultDriver&lat=0.333&long=0.444",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"admin",
-						"driver"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						},
-						{
-							"key": "name",
-							"value": "DefaultDriver"
-						},
-						{
-							"key": "lat",
-							"value": "0.333"
-						},
-						{
-							"key": "long",
-							"value": "0.444"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "DELETE Driver",
 			"request": {
 				"method": "DELETE",
@@ -279,123 +463,6 @@
 						{
 							"key": "id",
 							"value": "1"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET Riders",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/admin/rider",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"admin",
-						"rider"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "POST Rider",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/admin/rider?id=1&name=DefaultRider&lat=0.333&long=0.444",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"admin",
-						"rider"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						},
-						{
-							"key": "name",
-							"value": "DefaultRider"
-						},
-						{
-							"key": "lat",
-							"value": "0.333"
-						},
-						{
-							"key": "long",
-							"value": "0.444"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PUT Rider",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/admin/rider?id=1&name=DefaultRider&lat=0.111&long=0.222",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"admin",
-						"rider"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						},
-						{
-							"key": "name",
-							"value": "DefaultRider"
-						},
-						{
-							"key": "lat",
-							"value": "0.111"
-						},
-						{
-							"key": "long",
-							"value": "0.222"
 						}
 					]
 				}
@@ -441,11 +508,22 @@
 				"method": "PUT",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": ""
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "lat",
+							"value": "0.888",
+							"type": "text"
+						},
+						{
+							"key": "long",
+							"value": "0.999",
+							"type": "text"
+						}
+					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/admin/rider?id=1&lat=0.555&long=0.666",
+					"raw": "http://127.0.0.1:5000/rider/update_position?id=1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -455,25 +533,13 @@
 					],
 					"port": "5000",
 					"path": [
-						"admin",
-						"rider"
+						"rider",
+						"update_position"
 					],
 					"query": [
 						{
 							"key": "id",
 							"value": "1"
-						},
-						{
-							"key": "lat",
-							"value": "0.555"
-						},
-						{
-							"key": "long",
-							"value": "0.666"
-						},
-						{
-							"key": null,
-							"value": null
 						}
 					]
 				}
@@ -523,11 +589,22 @@
 				"method": "PUT",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": ""
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "lat",
+							"value": "1.111",
+							"type": "text"
+						},
+						{
+							"key": "long",
+							"value": "1.222",
+							"type": "text"
+						}
+					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/driver/update_position?id=1&lat=0.777&long=0.888",
+					"raw": "http://127.0.0.1:5000/driver/update_position?id=1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -544,14 +621,6 @@
 						{
 							"key": "id",
 							"value": "1"
-						},
-						{
-							"key": "lat",
-							"value": "0.777"
-						},
-						{
-							"key": "long",
-							"value": "0.888"
 						}
 					]
 				}
@@ -564,11 +633,17 @@
 				"method": "PUT",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": ""
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "destination",
+							"value": "San Marcos",
+							"type": "text"
+						}
+					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/rider/set_destination?id=1&destination=San Marcos",
+					"raw": "http://127.0.0.1:5000/rider/set_destination?id=1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -585,10 +660,6 @@
 						{
 							"key": "id",
 							"value": "1"
-						},
-						{
-							"key": "destination",
-							"value": "San Marcos"
 						}
 					]
 				}
@@ -601,11 +672,22 @@
 				"method": "PUT",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": ""
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "driver_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "rider_id",
+							"value": "1",
+							"type": "text"
+						}
+					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/rider/select_driver?driver_id=1&rider_id=1",
+					"raw": "http://127.0.0.1:5000/rider/select_driver",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -617,15 +699,49 @@
 					"path": [
 						"rider",
 						"select_driver"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Update Driver Availability",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "available",
+							"value": "1",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/driver/update_availability?id=1&available=true",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"driver",
+						"update_availability"
 					],
 					"query": [
 						{
-							"key": "driver_id",
+							"key": "id",
 							"value": "1"
 						},
 						{
-							"key": "rider_id",
-							"value": "1"
+							"key": "available",
+							"value": "true"
 						}
 					]
 				}
