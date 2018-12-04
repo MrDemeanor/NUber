@@ -378,7 +378,7 @@ class Driver(Resource):
         parser.add_argument('lat', type=float)
         parser.add_argument('long', type=float)
         parser.add_argument('amountMoney', type=float)
-        # parser.add_argument('selected_rider', type=int)
+        parser.add_argument('selected_rider', type=int)
 
         self.args = parser.parse_args()
 
@@ -529,7 +529,7 @@ class Rider(Resource):
                 rider.lat = self.args['lat']
                 rider.long = self.args['long']
                 rider.groupHost = self.args['groupHost']
-                rider.outstandingBalance = self.args['oustandingBalance']
+                rider.outstandingBalance = self.args['outstandingBalance']
                 db.session.commit()
             except DatabaseError:
                 return abort(501, 'The rider was not updated!')
