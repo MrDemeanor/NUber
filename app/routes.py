@@ -206,7 +206,7 @@ class GetRiderCharge(Resource):
                 destination = rider.destination
 
                 #call the client function and provide API
-                gmaps = client.Client(key="AIzaSyDnU-JemCr6s4EIUmmmglb-w5LdoYzZInE")
+                gmaps = client.Client(key="AIzaSyDJpvTBLUVor9hgDQyT3rp6jxzWUzFdD2Q")
 
                 #Distance is calculated in meters, converted to miles, and multiplied by 1.50 (cost of driving a mile)
                 distance = distance_matrix.distance_matrix(gmaps, origins, destination, mode='driving')["rows"][0]["elements"][0]["distance"]["value"]
@@ -215,7 +215,8 @@ class GetRiderCharge(Resource):
                 indCost = cost/numRiders #cost for individual rider in group
 
                 for groupMember in group:
-                    groupMember.oustandingBalance = indCost
+                    groupMember.outstandingBalance = indCost
+                    print(groupMember.name)
 
                 db.session.commit()
                 
