@@ -11,6 +11,7 @@ For Mr. Diaz's CS 3398 Software Engineering class, we have created a RESTful API
 - Flask_Marshmallow
 - Flask_Migrate
 - Marshmallow_SQLAlchemy
+- Google Maps API
 
 <hr>
 
@@ -47,11 +48,14 @@ For Mr. Diaz's CS 3398 Software Engineering class, we have created a RESTful API
 
 ### How to Use Extra Features
 
-- Groups :: riders have an attribute field named 'groupHost', by setting 
+- Groups :: Riders have an attribute field named 'groupHost', by setting 
             your 'groupHost' to another rider's 'name' you will be added to their group. When in 
             a group only the group host can select a driver.
-- RideCost :: riders have an attribute called 'outstandingBalance', this holds how much 
-              money riders owe their driver, this cost is divided by number of people in the group.
+- RideCost :: Riders have an attribute called 'outstandingBalance', this holds how much 
+              money riders owe their driver, this cost is divided by the number of people in the group.
+- Radius Search :: Drivers have attribute fields 'avaiable', 'lat', and 'long' which describe their availability and location. These                        fields allow for riders to search for potential drivers based on their availability and relative distance from the                      rider
+- Charge Riders :: Drivers obviously wish to be paid. Once a Rider has reached their destination, calculations are performed based on                      how far the rider was transported from their original location, and a cost is assigned at a fixed rate per mile.
+- Rating System :: Each Driver posseses a 'rating' attribute, which holds an aggregate average of their ratings, given to them by                          previous Riders. This Rating System is used to assess the overall perceived quality of the Driver.
 
 <hr>
 
@@ -59,6 +63,15 @@ For Mr. Diaz's CS 3398 Software Engineering class, we have created a RESTful API
 Below are the available list of routes and their functionalities
 
 #### Admin
+- ```/admin```
+  - GET:
+  
+  - POST:
+  
+  - PUT:
+  
+  - DELETE:
+
 - ```/admin/driver```
   - GET: Returns a list of all drivers in the database
     - Arguments: None
@@ -66,7 +79,51 @@ Below are the available list of routes and their functionalities
     - Arguments: 
       - id: integer
       - name: string
+  - PUT:
   - DELETE: Deletes a driver from the database
     - Arguments:
       - id: integer
-- blah
+
+
+- ```/admin/rider```
+  - GET:
+  
+  - POST:
+  
+  - PUT:
+  
+  - DELETE:
+
+
+#### Driver
+- ```/driver/update_position```
+  - PUT:
+  
+- ```/driver/update_availability```
+  - PUT:
+  
+- ```/driver/get_rider_destination```
+  - GET:
+
+- ```/driver/get_rider_location```
+  - GET:
+
+- ```/driver/get_rider_charge```
+  - GET:
+
+#### Rider
+- ```/rider/set_destination```
+  - PUT:
+  
+- ```/rider/update_position```
+  - PUT:
+
+- ```/rider/select_driver```
+  - PUT:
+
+- ```/rider/get_drivers```
+  - GET:
+
+- ```/rider/get_driver_location```
+  - GET:
+  
