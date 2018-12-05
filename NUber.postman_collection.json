@@ -164,6 +164,44 @@
 			"response": []
 		},
 		{
+			"name": "POST Rate Driver",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "driver_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "rating",
+							"value": "5",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/rider/rate_driver",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"rider",
+						"rate_driver"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "PUT Admin",
 			"request": {
 				"method": "PUT",
@@ -660,7 +698,24 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": ""
+					"raw": "http://127.0.0.1:5000/get_rider_destination?driver_id=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get_rider_destination"
+					],
+					"query": [
+						{
+							"key": "driver_id",
+							"value": "1"
+						}
+					]
 				}
 			},
 			"response": []
@@ -675,7 +730,25 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": ""
+					"raw": "http://127.0.0.1:5000/rider/get_driver_location?rider_id=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"rider",
+						"get_driver_location"
+					],
+					"query": [
+						{
+							"key": "rider_id",
+							"value": "1"
+						}
+					]
 				}
 			},
 			"response": []
@@ -690,7 +763,25 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": ""
+					"raw": "http://127.0.0.1:5000/driver/get_rider_location?driver_id=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"driver",
+						"get_rider_location"
+					],
+					"query": [
+						{
+							"key": "driver_id",
+							"value": "1"
+						}
+					]
 				}
 			},
 			"response": []
@@ -705,7 +796,58 @@
 					"raw": ""
 				},
 				"url": {
+					"raw": "http://127.0.0.1:5000/driver/get_rider_charge?driver_id=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"driver",
+						"get_rider_charge"
+					],
+					"query": [
+						{
+							"key": "driver_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Driver's Average Rating",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
 					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/rider/get_driver_average?driver_id=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"rider",
+						"get_driver_average"
+					],
+					"query": [
+						{
+							"key": "driver_id",
+							"value": "1"
+						}
+					]
 				}
 			},
 			"response": []
