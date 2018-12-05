@@ -45,6 +45,15 @@ For Mr. Diaz's CS 3398 Software Engineering class, we have created a RESTful API
 ```
 <hr>
 
+### How to Use Extra Features
+
+- Groups :: riders have an attribute field named 'groupHost', by setting 
+            your 'groupHost' to another rider's 'name' you will be added to their group
+- RideCost :: riders have an attribute called 'outstandingBalance', this holds how much 
+              money riders owe their driver, this cost is divide by people in the group
+
+<hr>
+
 ### Routes
 Below are the available list of routes and their functionalities
 
