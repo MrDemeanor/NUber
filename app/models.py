@@ -10,6 +10,7 @@ class DriverModel(db.Model):
     selected_rider = db.Column(db.Integer)
     available = db.Column(db.Boolean)
     amountMoney = db.Column(db.Float)
+    ratings = db.relationship('RatingModel', backref='author', lazy='dynamic')
 
     def __repr__(self):
         return '<Driver {}>'.format(self.name)
@@ -41,4 +42,15 @@ class AdminModel(db.Model):
     def __repr__(self):
         return '<Admin {}>'.format(self.name)
 
+
     
+class RatingModel (db.Model):
+
+    __tablename__ = "ratings"
+
+    id = db.Column(db.Integer, primary_key=True)
+    driver_id = db.Column(db.Integer, db.ForeignKey('driver.id'))
+    rating = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Rating {}>'.format(self.name)    
