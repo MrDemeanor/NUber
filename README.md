@@ -193,5 +193,14 @@ Below are the available list of routes and their functionalities
   - GET: Returns driver's location
     - Arguments:
       - rider_id: int
-  
-  
+
+- ```/rider/get_driver_average```
+  - GET: Returns driver's average rating
+    - Arguments:
+      - driver_id: int
+      
+- ```/rider/rate_driver```
+  - POST: Adds a rating to the rider's driver
+    - Body:
+      - driver_id: int
+      - rating: int
