@@ -49,9 +49,9 @@ For Mr. Diaz's CS 3398 Software Engineering class, we have created a RESTful API
 
 - Groups :: riders have an attribute field named 'groupHost', by setting 
             your 'groupHost' to another rider's 'name' you will be added to their group. When in 
-            someone else's group you will NOT be able to select a driver
+            a group only the group host can select a driver.
 - RideCost :: riders have an attribute called 'outstandingBalance', this holds how much 
-              money riders owe their driver, this cost is divided by number of people in the group
+              money riders owe their driver, this cost is divided by number of people in the group.
 
 <hr>
 
