@@ -64,43 +64,87 @@ Below are the available list of routes and their functionalities
 
 #### Admin
 - ```/admin```
-  - GET:
-  
-  - POST:
-  
-  - PUT:
-  
-  - DELETE:
-
+  - GET: Returns a list of all admins in the database
+    - Arguments: None
+  - POST: Create a new admin
+    - Body:
+      - id: integer
+      - name: string
+  - PUT: Updates an admin
+    - Arguments:
+      -id: integer
+    - Body:
+      -name: string
+  - DELETE: Deletes an admin from the database
+    - Arguments:
+      - id: integer
+      
 - ```/admin/driver```
   - GET: Returns a list of all drivers in the database
     - Arguments: None
   - POST: Creates a new driver
-    - Arguments: 
+    - Body: 
       - id: integer
       - name: string
-  - PUT:
+      - lat: float
+      - long: float
+      - available: boolean
+      - amountMoney: float
+      - selected_rider: integer
+  - PUT: Updates a driver
+    - Arguments:
+      - id: integer
+    - Body:
+      - name: string
+      - lat: float
+      - long: float
+      - available: boolean
+      - amountMoney: float
+      - selected_rider: integer
   - DELETE: Deletes a driver from the database
     - Arguments:
       - id: integer
-
-
+      
 - ```/admin/rider```
-  - GET:
-  
-  - POST:
-  
-  - PUT:
-  
-  - DELETE:
-
+  - GET: Returns a list of all riders in the database
+    - Arguments: None
+  - POST: Creates a new rider
+    - Body:
+      - id: integer
+      - name: string
+      - lat: float
+      - long: float
+      - outstandingBalance: float
+      - groupHost: string
+  - PUT: Updates a rider
+    - Arguments:
+      - id: integer
+    - Body:
+      - id: integer
+      - name: string
+      - lat: float
+      - long: float
+      - outstandingBalance: float
+      - groupHost: string
+  - DELETE: Deletes a rider from the database
+    - Arguments:
+      - id: integer
 
 #### Driver
 - ```/driver/update_position```
-  - PUT:
+  - PUT: Updates driver Position
+    - Arguments:
+      - id: integer
+    - Body:
+      - lat: float
+      - long: float
   
 - ```/driver/update_availability```
-  - PUT:
+  - PUT: Updates driver availability
+    - Arguments:
+      - id: integer
+    - Body:
+      - available: boolean
   
 - ```/driver/get_rider_destination```
   - GET:
