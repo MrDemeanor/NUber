@@ -1,14 +1,67 @@
 from app import app, db
 from flask_restful import Resource, Api, reqparse
-from app.models import AdminModel, RiderModel, DriverModel
+from app.models import AdminModel, RiderModel, DriverModel, RatingModel
 from flask import jsonify, abort
 from sqlalchemy.exc import DatabaseError
-from app.serializers import admin_schema_many, rider_schema_many, driver_schema_many, rider_schema
+from app.serializers import admin_schema_many, rider_schema_many, driver_schema_many, rider_schema, rating_schema, rating_schema_many
 from app.haversine import Haversine
 from googlemaps import distance_matrix
 from googlemaps import client
 
 api = Api(app)
+
+class GetDriverAverageRating(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('driver_id', type=int)
+        self.args = parser.parse_args()
+    
+    def get(self):
+        average_rating = 0
+        driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
+        if driver is None:
+            abort(502, 'Driver not found from the database')
+        
+        else:
+            try:
+                all_ratings = driver.ratings.all()
+                for rate in all_ratings:
+                    average_rating += rate.rating
+                
+                average_rating /= len(all_ratings)
+                return jsonify(average_rating=average_rating)
+            except:
+                abort(502, 'Could not get the average rating')
+        
+        return jsonify(message='Some other error took place')
+        
+class RateDriver(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('driver_id', type=int)
+        parser.add_argument('rating', type=int)
+        self.args = parser.parse_args()
+        super().__init__()
+    
+    def post(self):
+        if self.args['rating'] < 0 or self.args['rating'] > 5:
+            abort(503, 'Please input a rating between 0 and 5')
+        # Query the driver from the database
+        rated_driver = DriverModel.query.filter_by(id=self.args['driver_id']).first()
+        if rated_driver is None:
+            abort(502, 'Driver was not found')
+        
+        else:
+            try:
+                all_ratings = RatingModel.query.all()
+                rating = RatingModel(id=len(all_ratings), rating=self.args['rating'], driver_id=self.args['driver_id'], author=rated_driver)
+                db.session.add(rating)
+                db.session.commit()
+            except:
+                abort(502, 'Rating was not added to the database')
+        
+        return jsonify(message='Rating was successfully applied to driver')
+
 
 
 class UpdateDriverAvailability(Resource):
