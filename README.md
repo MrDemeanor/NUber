@@ -147,27 +147,51 @@ Below are the available list of routes and their functionalities
       - available: boolean
   
 - ```/driver/get_rider_destination```
-  - GET:
+  - GET: Returns rider's destination
+    - Arguments:
+      - driver_id: int
 
 - ```/driver/get_rider_location```
-  - GET:
+  - GET: Returns rider's location
+    - Arguments:
+      - driver_id: int
 
 - ```/driver/get_rider_charge```
-  - GET:
+  - GET: Returns rider's chare
+    - Arguments:
+      - driver_id: int
 
 #### Rider
 - ```/rider/set_destination```
-  - PUT:
+  - PUT: Updates rider's destination
+    - Arguments:
+      - id: int
+    - Body:
+      - destination: string
   
 - ```/rider/update_position```
-  - PUT:
+  - PUT: Updates rider's position
+    - Arguments:
+      - id: integer
+    - Body:
+      - lat: float
+      - long: float
 
 - ```/rider/select_driver```
-  - PUT:
+  - PUT: Selects an available driver for the rider. NOTE: If the rider is in a group and is not the host, they cannot do this
+    - Body:
+      - driver_id: int
+      - rider_id: int
 
 - ```/rider/get_drivers```
-  - GET:
+  - GET: Returns driver's in a given radius
+    - Arguments:
+      - id: int
+      - radius: int 
 
 - ```/rider/get_driver_location```
-  - GET:
+  - GET: Returns driver's location
+    - Arguments:
+      - rider_id: int
+  
   
