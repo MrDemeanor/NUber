@@ -72,9 +72,9 @@ Below are the available list of routes and their functionalities
       - name: string
   - PUT: Updates an admin
     - Arguments:
-      -id: integer
+      - id: integer
     - Body:
-      -name: string
+      - name: string
   - DELETE: Deletes an admin from the database
     - Arguments:
       - id: integer
