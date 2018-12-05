@@ -72,9 +72,9 @@ Below are the available list of routes and their functionalities
       - name: string
   - PUT: Updates an admin
     - Arguments:
-      -id: integer
+      - id: integer
     - Body:
-      -name: string
+      - name: string
   - DELETE: Deletes an admin from the database
     - Arguments:
       - id: integer
@@ -193,5 +193,14 @@ Below are the available list of routes and their functionalities
   - GET: Returns driver's location
     - Arguments:
       - rider_id: int
-  
-  
+
+- ```/rider/get_driver_average```
+  - GET: Returns driver's average rating
+    - Arguments:
+      - driver_id: int
+      
+- ```/rider/rate_driver```
+  - POST: Adds a rating to the rider's driver
+    - Body:
+      - driver_id: int
+      - rating: int
