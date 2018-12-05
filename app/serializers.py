@@ -24,3 +24,6 @@ rider_schema = RiderSchema()
 
 admin_schema_many = AdminSchema(many=True)
 admin_schema = AdminSchema()
+
+rating_schema_many = RatingSchema(many=True)
+rating_schema = RatingSchema()
